@@ -38,11 +38,13 @@ include $(DEVKITPRO)/libnx/switch_rules
 #   NACP building is skipped as well.
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
+APP_TITLE	:=	Unreal
+APP_AUTHOR	:=	Epic Games, OldUnreal, fgsfds
+APP_VERSION	:=	r1 / 227j
 BUILD		:=	build
 SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
-#ROMFS	:=	romfs
 
 #---------------------------------------------------------------------------------
 # options for code generation
