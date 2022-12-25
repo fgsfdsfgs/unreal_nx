@@ -24,7 +24,7 @@ This will only work with Unreal/UnrealGold 227j right now. If 227k is released, 
 This will likely not work in applet/album mode. Use a proper game override.
 
 The performance sucks, mostly because of the dynamic lights.
-You can disable dynamic lighjts to get a performance increase at the cost of all the pretty lighting effects in the game.
+You can disable dynamic lights to get a performance increase at the cost of all the pretty lighting effects in the game.
 To do that, in `SystemARM/UnrealLinux.ini` look for `NoDynamicLights` and set it to `True`.
 
 You can also disable volumetric lights to get a small performance increase in some areas with less of an impact on visuals.
@@ -46,6 +46,9 @@ Joystick sensitivity can be adjusted for each axis individually in the `SystemAR
 Search for for `SpeedBase` and edit the number for each axis to your liking.
 
 You can bring up the on-screen keyboard by pressing `MINUS` at any time.
+
+You can enable the advanced XOpenGL renderer, though it hasn't been tested much, does not seem to improve performance
+and will probably explode. To do that, in `SystemARM/UnrealLinux.ini` change `GameRenderDevice=OpenGLDrv.OpenGLRenderDevice` to `GameRenderDevice=XOpenGLDrv.XOpenGLRenderDevice`.
 
 If the game crashes, usually there will be a message on the screen telling you the reason.
 It will also create logs at `SystemARM/fatal.log` and `SystemARM/UnrealLinux.log`.
