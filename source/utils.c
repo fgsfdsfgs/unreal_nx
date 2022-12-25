@@ -4,20 +4,12 @@
 #include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include <SDL2/SDL.h>
 
 #include "utils.h"
 
 static int nxlink_sock = -1;
-
-void nxlink_init(void) {
-  nxlink_sock = nxlinkStdio();
-}
-
-void nxlink_quit(void) {
-  if (nxlink_sock >= 0)
-    close(nxlink_sock);
-}
 
 void fatal_error(const char *fmt, ...) {
   PadState pad;
@@ -57,6 +49,20 @@ void fatal_error(const char *fmt, ...) {
   nxlink_quit();
   consoleExit(NULL);
   exit(1);
+}
+
+int file_exists(const char *fname) {
+  struct stat st;
+  return stat(fname, &st) == 0;
+}
+
+void nxlink_init(void) {
+  nxlink_sock = nxlinkStdio();
+}
+
+void nxlink_quit(void) {
+  if (nxlink_sock >= 0)
+    close(nxlink_sock);
 }
 
 void *get_tpidr_el0(void) {

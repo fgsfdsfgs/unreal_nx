@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
+#include <dirent.h>
 #include <errno.h>
 
 #include <switch.h>
@@ -57,6 +58,29 @@ static inline void apply_patches(void) {
     fatal_error("Could not patch Engine.so. Check if you have the right version.");
 }
 
+// check if the user has loc files for UPak but not UPak itself
+// this can cause the game to try to load UPak and crash when entering the New Game menu
+static inline void check_upak(void) {
+  if (file_exists("System/UPak.u")) return;
+  if (!file_exists("SystemLocalized/int/UPak.int")) return;
+
+  char tmp[PATH_MAX] = { 0 };
+  DIR *dir = opendir("SystemLocalized");
+  if (!dir) return;
+
+  printf("Found UPak.int, but not UPak.u! Deleting UPak locfiles\n");
+
+  struct dirent *dent = readdir(dir);
+  while (dent) {
+    snprintf(tmp, sizeof(tmp), "SystemLocalized/%s/UPak.%s", dent->d_name, dent->d_name);
+    if (remove(tmp) == 0)
+      printf("- removed %s\n", tmp);
+    dent = readdir(dir);
+  }
+
+  closedir(dir);
+}
+
 int main(int argc, char *argv[]) {
   // if we've been passed any arguments, that was probably from nxlink
   if (argc > 1)
@@ -80,6 +104,9 @@ int main(int argc, char *argv[]) {
   // HACK: switch appears to use tpidrro_el0 for TP storage, but unreal uses tpidr_el0, so we feed it a tls buffer
   // libsolder only "properly" handles local-exec TLS, so this will hopefully just resolve itself
   set_tpidr_el0(fake_tls);
+
+  // check for UPak
+  check_upak();
 
   if (chdir("./SystemARM") < 0)
     fatal_error("Could not cd into SystemARM:\n%d", errno);
