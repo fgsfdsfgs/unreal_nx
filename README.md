@@ -1,4 +1,4 @@
-### UnrealNX
+## UnrealNX
 This is a Switch port/loader for Unreal and Unreal Gold.
 It loads the aarch64-linux binaries supplied with the 227j patch for Unreal/Unreal Gold, patches them and runs them,
 similar in function to the [Max Payne Mobile loader](https://github.com/fgsfdsfgs/max_nx).
@@ -88,3 +88,7 @@ make
 * OldUnreal for the 227j patch;
 * Switchbrew for libnx;
 * devkitPro for devkitA64.
+
+### Legal
+This project has no direct affiliation with Epic Games or OldUnreal. 
+No assets or program code from the original game are included in this project.
