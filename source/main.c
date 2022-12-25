@@ -61,14 +61,17 @@ static inline void apply_patches(void) {
 // check if the user has loc files for UPak but not UPak itself
 // this can cause the game to try to load UPak and crash when entering the New Game menu
 static inline void check_upak(void) {
-  if (file_exists("System/UPak.u")) return;
-  if (!file_exists("SystemLocalized/int/UPak.int")) return;
+  if (file_exists("System/UPak.u") && file_exists("Sounds/Marine.uax"))
+    return; // likely fully installed UPak
+
+  if (!file_exists("SystemLocalized/int/UPak.int"))
+    return; // already deleted
 
   char tmp[PATH_MAX] = { 0 };
   DIR *dir = opendir("SystemLocalized");
   if (!dir) return;
 
-  printf("Found UPak.int, but not UPak.u! Deleting UPak locfiles\n");
+  printf("Found UPak.int, but UPak is not installed! Deleting UPak locfiles\n");
 
   struct dirent *dent = readdir(dir);
   while (dent) {
