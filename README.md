@@ -28,7 +28,7 @@ You can disable dynamic lights to get a performance increase at the cost of all 
 To do that, in `SystemARM/UnrealLinux.ini` look for `NoDynamicLights` and set it to `True`.
 
 You can also disable volumetric lights to get a small performance increase in some areas with less of an impact on visuals.
-To do that, in `SystemARM/UnrealLinux.ini` look for all instances of `VolumetricLighting` and set them to `True`.
+To do that, in `SystemARM/UnrealLinux.ini` look for all instances of `VolumetricLighting` and set them to `False`.
 There might be other config parameters that affect performance, but I haven't explored that much yet.
 
 Trying to join a multiplayer game or opening the server browser will likely cause the game to crash.
