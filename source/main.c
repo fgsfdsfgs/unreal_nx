@@ -13,7 +13,9 @@
 #include "exports.h"
 #include "hooks.h"
 
-static __thread u8 fake_tls[0x1000];
+// need a bigger tls for this
+__thread uint8_t __solder_tls_buffer[0x40000];
+uint32_t __solder_tls_buffer_size = sizeof(__solder_tls_buffer);
 
 static void *main_elf;
 static void *engine_so;
@@ -54,6 +56,8 @@ static inline void apply_patches(void) {
   // Engine.so
   err += patch_instr(engine_so, 0x1590B4, 0x97FD2FD3, 0xAA1F03E0); // replace StaticLoadClass for physics with a `mov x0, #0`
   err += patch_instr(engine_so, 0x1590FC, 0xF9404A60, 0xAA1F03E0); // replace getting default physics class with a `mov x0, #0`
+  err += patch_instr(engine_so, 0x169E08, 0xB4001BE8, 0x140000DF); // jump over the screenshot generation for savegames
+  err += patch_instr(engine_so, 0x169E10, 0x34001BA9, 0x140000DD); // jump over the screenshot generation for savegames
   if (err != 0)
     fatal_error("Could not patch Engine.so. Check if you have the right version.");
 }
@@ -106,7 +110,7 @@ int main(int argc, char *argv[]) {
 
   // HACK: switch appears to use tpidrro_el0 for TP storage, but unreal uses tpidr_el0, so we feed it a tls buffer
   // libsolder only "properly" handles local-exec TLS, so this will hopefully just resolve itself
-  set_tpidr_el0(fake_tls);
+  set_tpidr_el0(__solder_tls_buffer);
 
   // check for UPak
   check_upak();

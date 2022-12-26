@@ -72,6 +72,11 @@ extern void sincosf(float, float *, float *);
 // general purpose dummy function
 static void dummy_fn(void) { }
 
+// exception handling is completely fucked anyway
+void wrap_cxa_throw(void *exdata, void *exinfo, void (*exdtor)(void *)) {
+  fatal_error("throw called:\n%ls\n", exdata ? (const wchar_t *)exdata : L"NULL");
+}
+
 void __assert_fail(const char *expr, const char *file, unsigned int line, const char *func) {
   fatal_error("ASSERTION FAILED AT %s:%u (%s):\n`%s`", file, line, func, expr);
 }
@@ -676,6 +681,7 @@ static s16 wrap_SDL_JoystickGetAxis(SDL_Joystick *joy, int axis) {
 // our SDL2 version is too old to have this
 void SDL_SetWindowAlwaysOnTop(void *window, int yes) { }
 
+
 // __libc_start_main replacement
 static void start_main(int (*main_fn)(int, char **, char **), int argc, char **argv, ...) {
   printf("calling main() @ %p\n", main_fn);
@@ -834,7 +840,7 @@ static const solder_export_t aux_exports[] = {
 };
 
 static const solder_export_t override_exports[] = {
-  // SOLDER_EXPORT("__cxa_atexit", dummy_fn),
+  SOLDER_EXPORT("__cxa_throw", wrap_cxa_throw),
   SOLDER_EXPORT("accept", wrap_accept),
   SOLDER_EXPORT("connect", wrap_connect),
   SOLDER_EXPORT("bind", wrap_bind),

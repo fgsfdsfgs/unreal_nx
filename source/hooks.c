@@ -6,6 +6,7 @@
 
 #include "utils.h"
 
+// exception handling is completely fucked
 // intercept appThrowf to at least see what the fuck happened
 
 void hook_app_throw(const wchar_t *fmt, ...) {
